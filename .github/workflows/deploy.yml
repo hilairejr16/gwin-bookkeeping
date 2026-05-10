@@ -72,7 +72,7 @@ jobs:
       - name: 🏗️ Build for Cloudflare Pages
         run: npx @cloudflare/next-on-pages@1
         env:
-          WEB3FORMS_ACCESS_KEY: ${{ secrets.WEB3FORMS_ACCESS_KEY }}
+          WEB3FORMS_ACCESS_KEY: ${{ secrets.WEB3FORMS_ACCESS_KEY || secrets.WEBFORMS_ACCESS_KEY }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://gwinhbookkeeping.com' }}
           NODE_ENV: production
 

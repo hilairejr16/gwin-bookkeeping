@@ -190,7 +190,7 @@ export async function POST(request: NextRequest) {
     // ── 8. Send via Web3Forms ─────────────────────────────────────────────
     // Web3Forms is a secure, free form service. No email credentials stored here.
     // Sign up at web3forms.com and add your access key to .env.local
-    const web3FormsKey = process.env.WEB3FORMS_ACCESS_KEY;
+    const web3FormsKey = process.env.WEB3FORMS_ACCESS_KEY ?? process.env.WEBFORMS_ACCESS_KEY;
     if (!web3FormsKey) {
       secureLog("error", "WEB3FORMS_ACCESS_KEY environment variable not set");
       return NextResponse.json(
