@@ -1,0 +1,97 @@
+# ══════════════════════════════════════════════════════════════════════════════
+# Gwin Bookkeeping LLC — GitHub Actions CI/CD Pipeline
+# Deploys to Cloudflare Pages on every push to main branch.
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# WHAT THIS DOES (explained for beginners):
+# 1. Every time you push code to GitHub, this runs automatically
+# 2. It checks your code quality (linting)
+# 3. It builds the website into optimized static files
+# 4. It uploads those files to Cloudflare Pages (your free hosting)
+# 5. Your live website updates within ~60 seconds
+#
+# SETUP REQUIRED:
+# Go to GitHub → Your Repo → Settings → Secrets and Variables → Actions
+# Add these two secrets:
+#   CLOUDFLARE_API_TOKEN  → Get from Cloudflare Dashboard → API Tokens
+#   CLOUDFLARE_ACCOUNT_ID → Get from Cloudflare Dashboard (right sidebar)
+# ══════════════════════════════════════════════════════════════════════════════
+
+name: 🚀 Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main              # Deploy on every push to main branch
+  pull_request:
+    branches:
+      - main              # Also run checks on pull requests (but don't deploy)
+
+# ── Permissions (Least Privilege) ────────────────────────────────────────────
+# Only grant the exact permissions this workflow needs — nothing more.
+permissions:
+  contents: read          # Read the repository code
+  deployments: write      # Create deployment records
+
+# ── Job: Build & Deploy ───────────────────────────────────────────────────────
+jobs:
+  build-and-deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest   # Free GitHub Actions runner (Linux VM)
+    timeout-minutes: 15      # Fail if it takes too long (cost/security control)
+
+    steps:
+      # ── Step 1: Download Your Code ────────────────────────────────────────
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1    # Only get the latest commit (faster)
+
+      # ── Step 2: Set Up Node.js ────────────────────────────────────────────
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"          # Same version as your local machine
+          cache: "npm"                # Cache npm packages for faster builds
+
+      # ── Step 3: Install Dependencies ──────────────────────────────────────
+      - name: 📦 Install dependencies
+        run: npm ci                   # ci = clean install (reproducible, secure)
+
+      # ── Step 4: Run Linting ───────────────────────────────────────────────
+      # ESLint checks your code for errors and best practices.
+      # If linting fails, the deployment STOPS — protecting you from bad code.
+      - name: 🔍 Run ESLint
+        run: npm run lint
+
+      # ── Step 5: Build the Website ─────────────────────────────────────────
+      # Next.js compiles and optimizes everything into static files.
+      # These files are what actually gets hosted on Cloudflare Pages.
+      - name: 🏗️ Build Next.js application
+        run: npm run build
+        env:
+          # Inject secrets from GitHub into the build process
+          # These are the same variables from your .env.example
+          WEB3FORMS_ACCESS_KEY: ${{ secrets.WEB3FORMS_ACCESS_KEY }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://gwinhbookkeeping.com' }}
+          NODE_ENV: production
+
+      # ── Step 6: Deploy to Cloudflare Pages ────────────────────────────────
+      # This uploads your built website to Cloudflare's global CDN.
+      # Your site will be live in all 300+ Cloudflare locations worldwide.
+      - name: 🌐 Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy out --project-name=gwin-bookkeeping --commit-dirty=true
+        # Only deploy on pushes to main (not on pull requests)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+      # ── Step 7: Deployment Success Notification ────────────────────────────
+      - name: ✅ Deployment complete
+        if: success()
+        run: |
+          echo "🎉 Website deployed successfully!"
+          echo "🌐 Live at: https://gwinhbookkeeping.com"
+          echo "📅 Deployed at: $(date)"

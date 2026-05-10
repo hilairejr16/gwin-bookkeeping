@@ -1,26 +1,416 @@
+/* ============================================================
+   Gwin Bookkeeping LLC — Global Styles & Brand Design System
+   Tailwind CSS v4 — configuration lives here via @theme
+   ============================================================ */
+
 @import "tailwindcss";
 
+/* ─── Brand Design Tokens ────────────────────────────────────────────────────
+   These are the single source of truth for every color, font, and spacing
+   value used across the entire website. Change them here, they update everywhere.
+   ──────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* ── Brand Colors ───────────────────────────────────────────────────────── */
+  --color-cream:        #F7F4EF;   /* Warm off-white — primary background    */
+  --color-cream-dark:   #EEE9E0;   /* Slightly darker cream for sections      */
+  --color-navy:         #1B2A4A;   /* Deep navy — primary text & CTAs         */
+  --color-navy-dark:    #0F1D35;   /* Darker navy for hover states            */
+  --color-navy-light:   #2D4170;   /* Lighter navy for accents                */
+  --color-sage:         #7C9A7E;   /* Sage green — trust & growth accents     */
+  --color-sage-light:   #A8C5AA;   /* Light sage for backgrounds              */
+  --color-sage-dark:    #5A7A5C;   /* Dark sage for hover states              */
+  --color-sage-pale:    #E8F0E9;   /* Very pale sage for section backgrounds  */
+  --color-gold:         #C4A76B;   /* Muted gold — premium accents            */
+  --color-gold-light:   #D9C28F;   /* Light gold for highlights               */
+  --color-gold-dark:    #A88A4D;   /* Dark gold for hover states              */
+  --color-dusty-blue:   #6B8CAE;   /* Dusty blue — secondary accents          */
+  --color-dusty-blue-light: #8FACC8; /* Lighter dusty blue                   */
+  --color-warm-white:   #FAFAF7;   /* Near-white for cards                    */
+  --color-text-primary: #1B2A4A;   /* Primary text — navy                     */
+  --color-text-secondary: #4A5568; /* Secondary text — medium gray            */
+  --color-text-muted:   #718096;   /* Muted text — light gray                 */
+  --color-border:       #E2E8F0;   /* Default border color                    */
+  --color-border-sage:  #C5D9C7;   /* Sage-tinted border                      */
+
+  /* ── Typography ─────────────────────────────────────────────────────────── */
+  --font-sans:    var(--font-inter);
+  --font-serif:   var(--font-playfair);
+  --font-display: var(--font-playfair);
+
+  /* ── Font Sizes ─────────────────────────────────────────────────────────── */
+  --text-display: 3.75rem;     /* 60px — hero headlines                       */
+  --text-display--line-height: 1.1;
+  --text-hero:    3rem;        /* 48px — page titles                          */
+  --text-hero--line-height:    1.15;
+
+  /* ── Border Radius ───────────────────────────────────────────────────────── */
+  --radius-card:    0.75rem;   /* 12px — cards                                */
+  --radius-button:  0.5rem;    /* 8px  — buttons                              */
+  --radius-badge:   9999px;    /* pill — badges                               */
+
+  /* ── Shadows ─────────────────────────────────────────────────────────────── */
+  --shadow-card:    0 4px 24px -4px rgba(27, 42, 74, 0.08), 0 1px 4px rgba(27, 42, 74, 0.04);
+  --shadow-card-hover: 0 12px 40px -8px rgba(27, 42, 74, 0.14), 0 2px 8px rgba(27, 42, 74, 0.06);
+  --shadow-button:  0 2px 8px rgba(27, 42, 74, 0.18);
+  --shadow-nav:     0 1px 16px rgba(27, 42, 74, 0.08);
+
+  /* ── Animation ───────────────────────────────────────────────────────────── */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast:   150ms;
+  --duration-normal: 250ms;
+  --duration-slow:   400ms;
+}
+
+/* ─── CSS Custom Properties (for runtime use) ───────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F7F4EF;
+  --foreground: #1B2A4A;
+  scroll-behavior: smooth;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ─── Base Styles ─────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-cream);
+  color: var(--color-text-primary);
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Focus Styles (Accessibility — keyboard navigation) ─────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-sage);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ─── Typography Utilities ────────────────────────────────────────────────── */
+.font-display {
+  font-family: var(--font-playfair), Georgia, serif;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* ─── Brand Gradient ─────────────────────────────────────────────────────── */
+.gradient-brand {
+  background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+}
+
+.gradient-sage {
+  background: linear-gradient(135deg, var(--color-sage-pale) 0%, var(--color-cream) 100%);
+}
+
+.gradient-gold {
+  background: linear-gradient(90deg, var(--color-gold-dark) 0%, var(--color-gold) 50%, var(--color-gold-dark) 100%);
+}
+
+/* ─── Card Component ─────────────────────────────────────────────────────── */
+.card {
+  background: var(--color-warm-white);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow var(--duration-normal) var(--ease-smooth),
+              transform var(--duration-normal) var(--ease-smooth);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+/* ─── Button Base ────────────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: var(--color-navy);
+  color: white;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: 0.01em;
+  border-radius: var(--radius-button);
+  border: 2px solid transparent;
+  box-shadow: var(--shadow-button);
+  transition: all var(--duration-normal) var(--ease-smooth);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-primary:hover {
+  background: var(--color-navy-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(27, 42, 74, 0.28);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: transparent;
+  color: var(--color-navy);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: 0.01em;
+  border-radius: var(--radius-button);
+  border: 2px solid var(--color-navy);
+  transition: all var(--duration-normal) var(--ease-smooth);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-secondary:hover {
+  background: var(--color-navy);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.btn-sage {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: var(--color-sage);
+  color: white;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: 0.01em;
+  border-radius: var(--radius-button);
+  border: 2px solid transparent;
+  transition: all var(--duration-normal) var(--ease-smooth);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-sage:hover {
+  background: var(--color-sage-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(124, 154, 126, 0.35);
+}
+
+/* ─── Section Utilities ──────────────────────────────────────────────────── */
+.section-padding {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+@media (max-width: 768px) {
+  .section-padding {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+}
+
+.container-narrow {
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* ─── Decorative Divider ─────────────────────────────────────────────────── */
+.divider-gold {
+  width: 4rem;
+  height: 2px;
+  background: var(--color-gold);
+  border-radius: 9999px;
+}
+
+/* ─── Badge ──────────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: var(--radius-badge);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.badge-sage {
+  background: var(--color-sage-pale);
+  color: var(--color-sage-dark);
+  border: 1px solid var(--color-border-sage);
+}
+
+.badge-gold {
+  background: #FDF8EF;
+  color: var(--color-gold-dark);
+  border: 1px solid #EDD9A3;
+}
+
+.badge-navy {
+  background: #EEF1F7;
+  color: var(--color-navy);
+  border: 1px solid #C5CEDF;
+}
+
+/* ─── Form Styles ────────────────────────────────────────────────────────── */
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: white;
+  border: 1.5px solid var(--color-border);
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  color: var(--color-text-primary);
+  transition: border-color var(--duration-fast) var(--ease-smooth),
+              box-shadow var(--duration-fast) var(--ease-smooth);
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: var(--color-sage);
+  box-shadow: 0 0 0 3px rgba(124, 154, 126, 0.15);
+}
+
+.form-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.form-input.error {
+  border-color: #E53E3E;
+  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.375rem;
+  letter-spacing: 0.01em;
+}
+
+.form-error {
+  font-size: 0.8125rem;
+  color: #E53E3E;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* ─── Section Title Block ────────────────────────────────────────────────── */
+.section-title {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 700;
+  color: var(--color-navy);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.section-subtitle {
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  max-width: 44rem;
+}
+
+/* ─── Smooth page transitions ────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s var(--ease-smooth) both;
+}
+
+/* ─── Animated underline for nav links ───────────────────────────────────── */
+.nav-link {
+  position: relative;
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-smooth);
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-sage);
+  border-radius: 9999px;
+  transition: width var(--duration-normal) var(--ease-smooth);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* ─── Scrollbar (subtle brand styling) ───────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-sage-light);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-sage);
+}
+
+/* ─── Print Styles ───────────────────────────────────────────────────────── */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white;
+    color: black;
+  }
+}
+
+/* ─── Reduced Motion (Accessibility) ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

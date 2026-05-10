@@ -1,8 +1,22 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# ══════════════════════════════════════════════════════════════════════════════
+# Gwin Bookkeeping LLC — .gitignore
+# Files and folders that should NEVER be committed to GitHub.
+# ══════════════════════════════════════════════════════════════════════════════
 
-# dependencies
-/node_modules
-/.pnp
+# ── SECURITY CRITICAL — NEVER COMMIT THESE ───────────────────────────────────
+.env                  # Local environment variables (contains secrets!)
+.env.local            # Local overrides (contains secrets!)
+.env.*.local          # Any local env files
+.env.production       # Production secrets
+*.pem                 # SSL/TLS private keys
+*.key                 # Private keys
+*.cert                # Certificates
+secrets/              # Any secrets folder
+credentials.json      # Service account credentials
+
+# ── Node.js Dependencies ─────────────────────────────────────────────────────
+node_modules/
+.pnp
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -10,32 +24,42 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
+# ── Next.js Build Output ──────────────────────────────────────────────────────
+.next/
+out/
+build/
 
-# next.js
-/.next/
-/out/
+# ── Testing & Coverage ────────────────────────────────────────────────────────
+coverage/
+.nyc_output
 
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
+# ── Debug Logs (can contain sensitive info) ───────────────────────────────────
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
 
-# env files (can opt-in for committing if needed)
-.env*
+# ── OS Files ──────────────────────────────────────────────────────────────────
+.DS_Store             # macOS folder metadata
+Thumbs.db             # Windows thumbnail cache
+desktop.ini           # Windows desktop config
 
-# vercel
+# ── Editor Files ──────────────────────────────────────────────────────────────
+.vscode/settings.json # Personal VSCode settings (share .vscode/extensions.json instead)
+.idea/                # JetBrains IDE files
+*.swp                 # Vim swap files
+*.swo
+
+# ── Cloudflare / Vercel ───────────────────────────────────────────────────────
 .vercel
+.wrangler/
 
-# typescript
+# ── TypeScript ────────────────────────────────────────────────────────────────
 *.tsbuildinfo
 next-env.d.ts
+
+# ── Misc ──────────────────────────────────────────────────────────────────────
+.cache/
+tmp/
+temp/
