@@ -53,10 +53,12 @@ jobs:
         with:
           node-version: "20"          # Same version as your local machine
           cache: "npm"                # Cache npm packages for faster builds
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true   # Suppress Node.js deprecation warnings
 
       # ── Step 3: Install Dependencies ──────────────────────────────────────
       - name: 📦 Install dependencies
-        run: npm ci                   # ci = clean install (reproducible, secure)
+        run: npm install --legacy-peer-deps   # legacy-peer-deps matches local install
 
       # ── Step 4: Run Linting ───────────────────────────────────────────────
       # ESLint checks your code for errors and best practices.
