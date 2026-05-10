@@ -58,7 +58,7 @@ jobs:
 
       # ── Step 3: Install Dependencies ──────────────────────────────────────
       - name: 📦 Install dependencies
-        run: npm install --legacy-peer-deps   # legacy-peer-deps matches local install
+        run: npm install                      # clean install with compatible versions
 
       # ── Step 4: Run Linting ───────────────────────────────────────────────
       # ESLint checks your code for errors and best practices.
