@@ -64,27 +64,24 @@ jobs:
       - name: 🔍 Run ESLint
         run: npm run lint
 
-      # ── Step 5: Build the Website ─────────────────────────────────────────
-      # Next.js compiles and optimizes everything into static files.
-      # These files are what actually gets hosted on Cloudflare Pages.
-      - name: 🏗️ Build Next.js application
-        run: npm run build
+      # ── Step 5: Build for Cloudflare Pages ───────────────────────────────
+      # @cloudflare/next-on-pages converts Next.js into Cloudflare Workers format.
+      # Output goes to .vercel/output/static (required by Cloudflare Pages).
+      - name: 🏗️ Build for Cloudflare Pages
+        run: npx @cloudflare/next-on-pages@1
         env:
-          # Inject secrets from GitHub into the build process
-          # These are the same variables from your .env.example
           WEB3FORMS_ACCESS_KEY: ${{ secrets.WEB3FORMS_ACCESS_KEY }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://gwinhbookkeeping.com' }}
           NODE_ENV: production
 
       # ── Step 6: Deploy to Cloudflare Pages ────────────────────────────────
-      # This uploads your built website to Cloudflare's global CDN.
-      # Your site will be live in all 300+ Cloudflare locations worldwide.
+      # Uploads the built files to Cloudflare's global CDN (300+ locations).
       - name: 🌐 Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy out --project-name=gwin-bookkeeping --commit-dirty=true
+          command: pages deploy .vercel/output/static --project-name=gwin-bookkeeping --commit-dirty=true
         # Only deploy on pushes to main (not on pull requests)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 

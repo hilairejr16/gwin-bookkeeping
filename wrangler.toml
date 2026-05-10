@@ -1,0 +1,17 @@
+# ══════════════════════════════════════════════════════════════════════════════
+# Gwin Bookkeeping LLC — Cloudflare Pages / Workers Configuration
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# This file tells Cloudflare how to run your website.
+# You do NOT need to edit this file — it works as-is.
+#
+# IMPORTANT: The nodejs_compat flag MUST be enabled in your Cloudflare
+# Pages dashboard: Settings → Runtime → Compatibility Flags → nodejs_compat
+# ══════════════════════════════════════════════════════════════════════════════
+
+name = "gwin-bookkeeping"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Pages-specific settings
+pages_build_output_dir = ".vercel/output/static"

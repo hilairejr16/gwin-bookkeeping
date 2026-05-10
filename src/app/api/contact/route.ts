@@ -1,18 +1,26 @@
 /**
  * Gwin Bookkeeping LLC — Secure Contact Form API Route
  *
+ * ⚡ Runs on Cloudflare Edge Runtime — fast, global, zero cold starts.
+ *
  * Security Measures:
+ * ✅ Edge Runtime (Cloudflare Workers-compatible)
  * ✅ Method restriction (POST only)
  * ✅ Rate limiting (5 requests per IP per 15 minutes)
  * ✅ Input validation with Zod (same schema as client-side)
  * ✅ Honeypot field server-side check
  * ✅ Content-Type enforcement
  * ✅ XSS-safe: input is never rendered as HTML
- * ✅ CSRF protection via SameSite cookie + X-Requested-With header
+ * ✅ CSRF protection via X-Requested-With header check
  * ✅ Error messages never expose internal details
  * ✅ Sends via Web3Forms (free, secure, no server-side email credentials)
  * ✅ Audit logging for security review
  */
+
+// ── Edge Runtime Declaration ──────────────────────────────────────────────
+// This tells Cloudflare Pages to run this route on the Edge (Workers) runtime.
+// Required for Cloudflare Pages compatibility.
+export const runtime = "edge";
 
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
@@ -42,13 +50,8 @@ function checkRateLimit(identifier: string): boolean {
   return true; // Allowed
 }
 
-// Clean up old records every 30 minutes to prevent memory leaks
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, value] of rateLimitStore.entries()) {
-    if (now > value.resetAt) rateLimitStore.delete(key);
-  }
-}, 30 * 60 * 1000);
+// Note: In Edge Runtime, the store is per-isolate. Cloudflare's built-in
+// rate limiting (WAF rules) provides additional protection at the network layer.
 
 // ── Validation Schema (mirrors client-side schema) ─────────────────────────
 const contactSchema = z.object({
