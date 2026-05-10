@@ -32,10 +32,7 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ── Close menu on route change ────────────────────────────────────────────
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, [pathname]);
+  // ── Close menu on route change is handled by onClick on each mobile link ──
 
   // ── Close menu on Escape key (accessibility) ──────────────────────────────
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -202,6 +199,7 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
+              onClick={() => setIsMenuOpen(false)}
               className={cn(
                 "block px-4 py-3 rounded-lg text-base font-medium transition-all duration-150",
                 isActive(link.href)
@@ -222,6 +220,7 @@ export default function Header() {
           <div className="pt-4 space-y-3">
             <Link
               href="/contact"
+              onClick={() => setIsMenuOpen(false)}
               className="btn-primary w-full justify-center"
               aria-label="Book a free consultation"
             >
@@ -229,6 +228,7 @@ export default function Header() {
             </Link>
             <Link
               href={`mailto:${BUSINESS.email}`}
+              onClick={() => setIsMenuOpen(false)}
               className="btn-secondary w-full justify-center text-sm"
             >
               Send Us an Email

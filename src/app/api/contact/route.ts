@@ -239,7 +239,6 @@ export async function POST(request: NextRequest) {
     });
 
     if (!web3Response.ok) {
-      const errorText = await web3Response.text().catch(() => "Unknown error");
       secureLog("error", "Web3Forms submission failed", { status: web3Response.status });
       return NextResponse.json(
         { success: false, message: "Failed to send message. Please try again or email us directly." },
@@ -267,7 +266,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
 
-  } catch (error) {
+  } catch {
     // Never expose error details to the client
     secureLog("error", "Unexpected error in contact route");
     return NextResponse.json(
